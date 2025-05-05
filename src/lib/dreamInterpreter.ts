@@ -4,7 +4,7 @@
 export async function interpretDream(dreamContent: string): Promise<{ success: boolean; interpretation?: string; error?: string }> {
   try {
     // API request payload
-    const payload = {
+   const payload = {
       model: "gpt-3.5-turbo",
       messages: [
         { 
@@ -17,7 +17,7 @@ export async function interpretDream(dreamContent: string): Promise<{ success: b
         }
       ]
     };
-
+console.log('Dream interpretation payload:', payload);
     // Mock API response for demo purposes
     // In a real implementation, this would be an actual API call:
     // const response = await fetch('https://api.openai.com/v1/chat/completions', {
