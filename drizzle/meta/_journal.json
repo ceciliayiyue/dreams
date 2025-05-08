@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1746694361097,
+      "tag": "0000_futuristic_shocker",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1746699051607,
+      "tag": "0001_remarkable_sprite",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1746699254009,
+      "tag": "0002_groovy_firebrand",
+      "breakpoints": true
+    }
+  ]
+}
