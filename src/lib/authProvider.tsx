@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter} from 'next/navigation';
 import {authClient} from "@/lib/auth-client";
 // Simple interface for user
 export interface User {
@@ -37,17 +37,18 @@ const { useSession } = authClient;
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const router = useRouter();
-    const pathname = usePathname();
 
     // Use better-auth session management
     const { data: session, isPending, error } = useSession();
-
+    if (error) {
+        console.error(error)
+    }
     // Update currentUser when session changes
     useEffect(() => {
         if (session?.user) {
             setCurrentUser({
                 id: session.user.id,
-                username: session.user.username || session.user.email,
+                username: session.user.email,
                 email: session.user.email
             });
         } else {
@@ -69,7 +70,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // Use better-auth signIn.email function
             const { data, error } = await authClient.signIn.email({
                 email: isEmail ? username : '',
-                username: !isEmail ? username : '',
                 password,
             });
 
@@ -87,16 +87,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
                 return { success: true, message: "Login successful" };
             } else {
+                console.error(error)
                 return {
                     success: false,
-                    message: error?.message || "Authentication failed"
+                    message: "Authentication failed"
                 };
             }
-        } catch (error: any) {
+        } catch (error) {
             console.error("Login error:", error);
             return {
                 success: false,
-                message: error?.message || "An error occurred during login"
+                message: "An error occurred during login"
             };
         }
     };
@@ -109,23 +110,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // Use better-auth signUp.email function
             const { data, error } = await authClient.signUp.email({
                 email: isEmail ? username : '',
-                username: !isEmail ? username : '',
-                password
+                name: username,
+                password,
             });
 
             if (data && !error) {
                 return { success: true, message: "Your account is created" };
             } else {
+                console.error("Signup error:", error);
                 return {
                     success: false,
-                    message: error?.message || "Sign up failed"
+                    message: "Sign up failed"
                 };
             }
-        } catch (error: any) {
+        } catch (error) {
             console.error("Signup error:", error);
             return {
                 success: false,
-                message: error?.message || "An error occurred during signup"
+                message: "An error occurred during signup"
             };
         }
     };

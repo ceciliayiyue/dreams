@@ -2,10 +2,7 @@ import {
     pgTable,
     serial,
     text,
-    varchar,
     timestamp,
-    uuid,
-    primaryKey,
     boolean
 } from 'drizzle-orm/pg-core';
 

@@ -116,7 +116,7 @@ export function DreamInterpretation({
                 </div>
               ) : (
                 <p className="text-gray-500">
-                  No interpretation available. Click "Interpret My Dream with AI" to get an analysis.
+                  No interpretation available. Click &quot;Interpret My Dream with AI&quot; to get an analysis.
                 </p>
               )}
             </CardContent>

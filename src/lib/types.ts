@@ -2,6 +2,7 @@
 export interface Dream {
   id?: number;
   date: Date;
+  dateKey: string;
   content: string;
   interpretation?: string;
   title?: string;

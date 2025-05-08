@@ -9,7 +9,6 @@ import { Header } from '@/components/ui/header'
 import { Dream } from '@/lib/types'
 import { useDreamStorage } from '@/lib/dreamStorage'
 import { Brain, Edit, Save, Trash2, Loader2 } from 'lucide-react'
-import {authClient} from '@/lib/auth-client';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,8 +31,6 @@ export default function Page() {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { useSession } = authClient;
-  const { status } = useSession();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // Format date to use as storage key
@@ -82,7 +79,14 @@ export default function Page() {
     try {
       setIsSaving(true);
       const dateKey = formatDateKey(selectedDate);
-      const newDream: Dream = {
+      const newDream: {
+        date: Date;
+        interpretation: string | undefined;
+        dateKey: string;
+        title: string | undefined;
+        content: string
+      } = {
+        dateKey: selectedDate.toString(),
         date: selectedDate,
         content: dreamContent,
         interpretation: currentDream?.interpretation,
@@ -136,33 +140,6 @@ export default function Page() {
   };
 
   // Show authentication prompt if user is not logged in
-  if (status === 'unauthenticated') {
-    return (
-        <div className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 flex flex-col">
-          <Header />
-          <main className="flex-grow flex items-center justify-center p-8">
-            <Card className="bg-white/80 backdrop-blur-sm border-purple-200 max-w-md w-full">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold text-purple-800 text-center">
-                  Sign In Required
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-center text-gray-700">
-                  Please sign in to access your dream journal.
-                </p>
-                <Button
-                    onClick={() => router.push('/api/auth/signin')}
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium"
-                >
-                  Sign In
-                </Button>
-              </CardContent>
-            </Card>
-          </main>
-        </div>
-    );
-  }
 
   return (
       <div className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 flex flex-col">

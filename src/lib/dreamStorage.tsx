@@ -47,9 +47,10 @@ export function DreamStorageProvider({ children }: { children: ReactNode }) {
         const userDreams = await response.json();
         const dreamMap = new Map<string, Dream>();
 
-        userDreams.forEach((dream: any) => {
+        userDreams.forEach((dream: Dream) => {
           dreamMap.set(dream.dateKey, {
             date: new Date(dream.dateKey),
+            dateKey: dream.dateKey,
             content: dream.content,
             interpretation: dream.interpretation || undefined,
             id: dream.id,

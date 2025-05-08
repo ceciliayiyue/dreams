@@ -16,7 +16,6 @@ import {
     FormMessage
 } from '@/components/ui/form';
 import {EyeIcon, EyeOffIcon} from 'lucide-react';
-import {useRouter} from "next/navigation";
 
 // Form validation schemaa
 const authSchema = z.object({
@@ -32,7 +31,6 @@ interface AuthFormProps {
 }
 
 export function AuthForm({ redirectPath }: AuthFormProps = {}) {
-    const router = useRouter();
     const {login, signup} = useAuth();
     const [message, setMessage] = useState<{ text: string; success: boolean } | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +81,7 @@ export function AuthForm({ redirectPath }: AuthFormProps = {}) {
             }
         } catch (error) {
             setMessage({
-                text: 'An error occurred. Please try again.',
+                text: `An error occurred. Please try again. ${error}`,
                 success: false
             });
         } finally {

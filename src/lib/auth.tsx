@@ -1,9 +1,8 @@
-// 'use client'
 import {betterAuth} from "better-auth";
 import {drizzleAdapter} from "better-auth/adapters/drizzle";
-import {db} from "@/db/drizzle.ts";
+import {db} from "@/db/drizzle";
 import {nextCookies} from "better-auth/next-js";
-import * as schema from "@/db/schema.ts";
+import * as schema from "@/db/schema";
 import {admin} from "better-auth/plugins";
 
 

@@ -1,14 +1,15 @@
 'use client'
 import { AuthForm } from '@/components/auth/AuthForm';
 import { useAuth } from '@/lib/authProvider';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
+// Create a client component that safely uses useSearchParams
+function LoginContent() {
     const { isAuthenticated, isLoading } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const redirectPath = searchParams.get('redirect');
+    const redirectPath = searchParams?.get('redirect');
 
     // Store redirect in state to pass to AuthForm
     const [redirectTo, setRedirectTo] = useState<string | null>(null);
@@ -36,11 +37,28 @@ export default function LoginPage() {
     }, [isAuthenticated, router, redirectTo, isLoading]);
 
     return (
+        <div className="w-full max-w-md">
+            <AuthForm redirectPath={redirectTo} />
+        </div>
+    );
+}
+
+// Loading fallback component
+function LoadingAuth() {
+    return (
+        <div className="w-full max-w-md flex justify-center p-8">
+            <div className="animate-pulse">Loading...</div>
+        </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
         <div className="min-h-screen w-full bg-gradient-to-b from-purple-50 to-purple-100 flex flex-col">
             <main className="flex-grow w-full flex flex-col items-center p-4">
-                <div className="w-full max-w-md">
-                    <AuthForm redirectPath={redirectTo} />
-                </div>
+                <Suspense fallback={<LoadingAuth />}>
+                    <LoginContent />
+                </Suspense>
             </main>
         </div>
     );

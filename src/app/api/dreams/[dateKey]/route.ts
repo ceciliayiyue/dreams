@@ -4,10 +4,16 @@ import { dreams as dreamsTable } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+type Props = {
+    params: Promise<{
+        dateKey: string
+    }>
+}
+
 // DELETE a dream by dateKey
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { dateKey: string } }
+    { params }: Props
 ) {
     try {
         const loadedHeaders = await headers();
@@ -23,7 +29,7 @@ export async function DELETE(
         }
 
         const userId = session.user.id;
-        const { dateKey } = params;
+        const { dateKey } = await params;
 
         if (!dateKey) {
             return NextResponse.json({ error: 'Missing date key' }, { status: 400 });
@@ -47,17 +53,19 @@ export async function DELETE(
 // GET a specific dream by dateKey
 export async function GET(
     request: NextRequest,
-    { params }: { params: { dateKey: string } }
+    { params }: Props
 ) {
     try {
-        const session = await getServerSession(authOptions);
+        const loadedHeaders = await headers();
+        const session = await auth.api.getSession({ headers: loadedHeaders});
+
 
         if (!session?.user?.id) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         const userId = session.user.id;
-        const { dateKey } = params;
+        const { dateKey } = await params;
 
         if (!dateKey) {
             return NextResponse.json({ error: 'Missing date key' }, { status: 400 });

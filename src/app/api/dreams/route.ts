@@ -6,7 +6,7 @@ import {auth} from '@/lib/auth';
 import {headers} from "next/headers"; // You should have this file for NextAuth configuration
 
 // GET all dreams for current user
-export async function GET(request: NextRequest) {
+export async function GET() {
     try {
         const loadedHeaders = await headers();
         const session = await auth.api.getSession({ headers: loadedHeaders});
