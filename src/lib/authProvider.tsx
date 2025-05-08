@@ -35,6 +35,7 @@ const { useSession } = authClient;
 
 // Provider component for authentication
 export function AuthProvider({ children }: { children: ReactNode }) {
+
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const router = useRouter();
 
@@ -90,14 +91,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 console.error(error)
                 return {
                     success: false,
-                    message: "Authentication failed"
+                    message: error?.message || "Authentication failed"
                 };
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Login error:", error);
             return {
                 success: false,
-                message: "An error occurred during login"
+                message:  error?.message || "An error occurred during login"
             };
         }
     };
@@ -120,14 +121,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 console.error("Signup error:", error);
                 return {
                     success: false,
-                    message: "Sign up failed"
+                    message: error?.message || "Sign up failed"
                 };
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Signup error:", error);
             return {
                 success: false,
-                message: "An error occurred during signup"
+                message: error?.message ||  "An error occurred during signup"
             };
         }
     };
