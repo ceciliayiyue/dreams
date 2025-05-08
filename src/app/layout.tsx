@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { DreamStorageProvider } from '@/lib/dreamStorage';
-import {AuthProvider} from "@/lib/authProvider";
-// import {AuthProvider} from "@/lib/auth";
+import { Providers } from '@/app/providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,13 +16,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
-        <AuthProvider>
-            <DreamStorageProvider>
-                {children}
-            </DreamStorageProvider>
-        </AuthProvider>
+        <Providers>
+            {children}
+        </Providers>
         </body>
         </html>
     );

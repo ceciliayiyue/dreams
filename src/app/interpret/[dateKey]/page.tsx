@@ -1,4 +1,4 @@
-import Interpretation from "@/app/(auth)/interpret/[dateKey]/Interpretation";
+import Interpretation from "@/app/interpret/[dateKey]/Interpretation";
 
 type Params = Promise<{ dateKey: string }>;
 export default async function Page({ params }: { params: Params}) {
