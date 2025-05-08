@@ -1,7 +1,8 @@
 'use client'
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useRouter} from 'next/navigation';
+import {createContext, useContext, useState, useEffect, ReactNode} from 'react';
+import {useRouter} from 'next/navigation';
 import {authClient} from "@/lib/auth-client";
+
 // Simple interface for user
 export interface User {
     username: string;
@@ -12,7 +13,10 @@ export interface User {
 // Authentication context values
 interface AuthContextType {
     currentUser: User | null;
-    login: (username: string, password: string, redirectPath?: string) => Promise<{ success: boolean; message: string }>;
+    login: (username: string, password: string, redirectPath?: string) => Promise<{
+        success: boolean;
+        message: string
+    }>;
     signup: (username: string, password: string) => Promise<{ success: boolean; message: string }>;
     logout: () => void;
     isAuthenticated: boolean;
@@ -23,24 +27,25 @@ interface AuthContextType {
 // Create the context with a default value
 export const AuthContext = createContext<AuthContextType>({
     currentUser: null,
-    login: async () => ({ success: false, message: "Not implemented" }),
-    signup: async () => ({ success: false, message: "Not implemented" }),
-    logout: () => {},
+    login: async () => ({success: false, message: "Not implemented"}),
+    signup: async () => ({success: false, message: "Not implemented"}),
+    logout: () => {
+    },
     isAuthenticated: false,
     isLoading: true
 });
 
 // Create the client-side auth instance
-const { useSession } = authClient;
+const {useSession} = authClient;
 
 // Provider component for authentication
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({children}: { children: ReactNode }) {
 
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const router = useRouter();
 
     // Use better-auth session management
-    const { data: session, isPending, error } = useSession();
+    const {data: session, isPending, error} = useSession();
     if (error) {
         console.error(error)
     }
@@ -69,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const isEmail = username.includes('@');
 
             // Use better-auth signIn.email function
-            const { data, error } = await authClient.signIn.email({
+            const {data, error} = await authClient.signIn.email({
                 email: isEmail ? username : '',
                 password,
             });
@@ -77,16 +82,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (data && !error) {
                 // After successful login, handle redirect manually with a small delay
                 // to ensure authentication state is updated
-                setTimeout(() => {
-                    if (redirectPath) {
-                        console.log("Redirecting to:", redirectPath);
-                        router.push(redirectPath);
-                    } else {
-                        router.push('/dashboard');
-                    }
-                }, 100);
+                if (redirectPath) {
+                    console.log("Redirecting to:", redirectPath);
+                    router.push(redirectPath);
+                } else {
+                    router.push('/dashboard');
+                }
 
-                return { success: true, message: "Login successful" };
+                return {success: true, message: "Login successful"};
             } else {
                 console.error(error)
                 return {
@@ -98,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.error("Login error:", error);
             return {
                 success: false,
-                message:  error?.message || "An error occurred during login"
+                message: error?.message || "An error occurred during login"
             };
         }
     };
@@ -109,14 +112,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const isEmail = username.includes('@');
 
             // Use better-auth signUp.email function
-            const { data, error } = await authClient.signUp.email({
+            const {data, error} = await authClient.signUp.email({
                 email: isEmail ? username : '',
                 name: username,
                 password,
             });
 
             if (data && !error) {
-                return { success: true, message: "Your account is created" };
+                return {success: true, message: "Your account is created"};
             } else {
                 console.error("Signup error:", error);
                 return {
@@ -128,7 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.error("Signup error:", error);
             return {
                 success: false,
-                message: error?.message ||  "An error occurred during signup"
+                message: error?.message || "An error occurred during signup"
             };
         }
     };
@@ -137,7 +140,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const logout = async () => {
         try {
             // Use better-auth signOut function
-            const { error } = await authClient.signOut({
+            const {error} = await authClient.signOut({
                 fetchOptions: {
                     onSuccess: () => {
                         // Redirect to login page
@@ -145,7 +148,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     }
                 }
             });
-
+            router.push('/dashboard');
             if (error) {
                 console.error("Logout error:", error);
             }
