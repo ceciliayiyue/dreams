@@ -117,11 +117,11 @@ export function AuthForm() {
                             name="username"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel className="text-sm font-medium text-purple-700">Username or Email</FormLabel>
+                                    <FormLabel className="text-sm font-medium text-purple-700">Email</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
-                                            placeholder="Enter your username or email"
+                                            placeholder="Enter your email"
                                             className="border-purple-200 focus:border-purple-400"
                                             disabled={isLoading}
                                         />
